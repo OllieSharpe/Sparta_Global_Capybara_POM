@@ -18,12 +18,24 @@ class BbcSignInPage
     visit(SIGN_IN_PAGE_URL)
   end
 
+  def current_url
+    page.current_url
+  end
+
   def enter_username
     fill_in(USERNAME_ELEMENT, :with => 'something_invalid_with_Mongooses')
   end
 
   def enter_no_username
     fill_in(USERNAME_ELEMENT, :with => '')
+  end
+
+  def enter_valid_username
+    fill_in(USERNAME_ELEMENT, :with => 'owjsharpe@aol.com')
+  end
+
+  def enter_real_password(password)
+    fill_in(PASSWORD_ELEMENT, :with => "#{password}")
   end
 
   def enter_password

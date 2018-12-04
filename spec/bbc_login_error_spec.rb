@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Incorrect user details produces valid error' do
 
   context 'it should respond with the correct error when incorrect details are input' do
-
+    
     it "should produce an error when inputting an incorrect username" do
       @bbc_site = BbcSite.new
       @bbc_site.bbc_homepage.visit_homepage
@@ -74,6 +74,29 @@ describe 'Incorrect user details produces valid error' do
       expect(@bbc_site.bbc_sign_in_page.general_error_exists?).to eq false
       expect(@bbc_site.bbc_sign_in_page.username_error_exists?).to eq false
       expect(@bbc_site.bbc_sign_in_page.return_password_error_message).to eq "Sorry, that password isn't valid. Please include a letter."
+    end
+
+    it "should respond with an error when a correct email is given with the wrong, but valid, password" do
+      @bbc_site = BbcSite.new
+      @bbc_site.bbc_homepage.visit_homepage
+      @bbc_site.bbc_sign_in_page.visit_sign_in_page
+      @bbc_site.bbc_sign_in_page.enter_valid_username
+      @bbc_site.bbc_sign_in_page.enter_password
+      @bbc_site.bbc_sign_in_page.click_sign_in
+      expect(@bbc_site.bbc_sign_in_page.general_error_exists?).to eq false
+      expect(@bbc_site.bbc_sign_in_page.username_error_exists?).to eq false
+      expect(@bbc_site.bbc_sign_in_page.return_password_error_message).to eq "Uh oh, that password doesn’t match that account. Please try again."
+    end
+
+    it "should correctlt redirect when valid information is given" do
+      @bbc_site = BbcSite.new
+      @bbc_site.bbc_homepage.visit_homepage
+      @bbc_site.bbc_sign_in_page.visit_sign_in_page
+      @bbc_site.bbc_sign_in_page.enter_valid_username
+      @bbc_site.bbc_sign_in_page.enter_real_password(ENV['REAL_ACCOUNT_PASSWORD'])
+      @bbc_site.bbc_sign_in_page.click_sign_in
+      expect(@bbc_site.bbc_homepage.current_url).to eq 'https://www.bbc.co.uk/'
+      expect(@bbc_site.bbc_homepage.check_if_logged_in).to eq 'Your account'
     end
 
   end

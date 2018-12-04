@@ -1,5 +1,8 @@
 require 'capybara/dsl'
+require 'dotenv'
 require_relative '../lib/bbc_site'
+
+Dotenv.load('.env')
 
 RSpec.configure do |config|
   config.formatter = :documentation
